@@ -8,7 +8,6 @@ var slackController = botkit.slackbot({
   clientId: process.env.CLIENTID,
   clientSecret: process.env.CLIENT_SECRET,
   scopes: ['bot'],
-  redirectUri: 'http://localhost:3000/oauth',
   json_file_store: __dirname + '/.data/db/'
 });
 
@@ -21,7 +20,7 @@ var bot = slackController.spawn({
 // Bot response to 'taxi' in direct message, direct mention and mention
 slackController.hears('taxi',['direct_message','direct_mention','mention'],function(bot,message) {
   bot.reply(message,`Hi, there! . Let me check your location.`);
-  //
+
   searchForTaxis();
 });
 

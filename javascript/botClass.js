@@ -1,4 +1,4 @@
-// Mock data for testing
+  // Mock data for testing
 const taxis = [{
     "state": "free",
     "name": "Skoda4",
