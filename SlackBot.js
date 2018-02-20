@@ -81,7 +81,7 @@ function checkTaxi(taxis, location) {
     }
   });
 
-  // Get info about all taxis from Cabify API
+  // Try to change taxi's state to hired
   fetch(`http://35.204.38.8:4000/api/v1/taxis/${choosenTaxi.city}/${choosenTaxi.name}`,{
     method: 'post',
     body: JSON.stringify(data),
