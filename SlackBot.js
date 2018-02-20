@@ -2,6 +2,7 @@
 var Botkit = require ('botkit');
 var fetch = require ('node-fetch');
 var controller = Botkit.slackbot();
+var bodyParser = require('body-parser');
 
 require ('dotenv').config();
 
@@ -43,11 +44,13 @@ function searchForTaxis() {
 // Get user location
 function getLocation() {
 
+  // Mocked location
   const location = {
     "lon": 1.3123,
     "lat": 38.123
   };
 
+  // This should get user location but doesn't work
   // navigator.geolocation.getCurrentPosition(function (position) {
   //   let location = {
   //     lon: position.coords.longitude,
@@ -63,6 +66,9 @@ function checkTaxi(taxis, location) {
   let distance = 1000000;
   let maxDistance = 200;
   let choosenTaxi;
+  const data = {
+    state: 'hired'
+  };
 
   // Checks every taxi and calculates its distance to the user's location
   taxis.forEach(taxi => {
@@ -74,6 +80,20 @@ function checkTaxi(taxis, location) {
       }
     }
   });
+
+  // Get info about all taxis from Cabify API
+  fetch(`http://35.204.38.8:4000/api/v1/taxis/${choosenTaxi.city}/${choosenTaxi.name}`,{
+    method: 'post',
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'application/json' },
+  })
+  .then(response => {
+    if (response.status !== 200) {
+      choosenTaxi = `There was an error trying to hire your taxi, please try again`;
+    }
+  })
+  .catch(error => console.log(error));
+
 
   // Bot post a message in Slack
   if (choosenTaxi !== `There's no free taxi near you right now`) {

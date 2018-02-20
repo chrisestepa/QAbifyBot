@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "botkit": "^0.6.11",
     "dotenv": "^5.0.0",
     "geolocation": "^0.2.0",
