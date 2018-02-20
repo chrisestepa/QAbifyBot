@@ -1,29 +1,30 @@
-// Could not resolve connection issues with Slack
-
 // Tool for building bots
-const botkit = require('botkit');
+var Botkit = require ('botkit');
+var fetch = require ('node-fetch');
+var controller = Botkit.slackbot();
+
+require ('dotenv').config();
 
 // Bot configuration
-var slackController = botkit.slackbot({
-  clientId: process.env.CLIENTID,
-  clientSecret: process.env.CLIENT_SECRET,
-  scopes: ['bot'],
-  json_file_store: __dirname + '/.data/db/'
-});
+var bot = controller.spawn({
+  token: process.env.BOT_TOKEN
+ });
 
 // Start bot
-slackController.startTicking();
-var bot = slackController.spawn({
-  token: process.env.SLACK_TOKEN
-}).startRTM();
+bot.startRTM(function(err,bot,payload) {
+  if (err) {
+    throw new Error('Could not connect to Slack');
+  }
+});
 
 // Bot response to 'taxi' in direct message, direct mention and mention
-slackController.hears('taxi',['direct_message','direct_mention','mention'],function(bot,message) {
+controller.hears('taxi',['direct_message','direct_mention','mention'],function(bot,message) {
   bot.reply(message,`Hi, there! . Let me check your location.`);
+
+  channel = message.channel;
 
   searchForTaxis();
 });
-
 
 // This function retrieves a taxi list and trigger checkTaxi()
 function searchForTaxis() {
@@ -41,13 +42,18 @@ function searchForTaxis() {
 
 // Get user location
 function getLocation() {
-  navigator.geolocation.getCurrentPosition(function (position) {
-    let location = {
-      lon: position.coords.longitude,
-      lat: position.coords.latitude
-    };
+
+  const location = {
+    "lon": 1.3123,
+    "lat": 38.123
+  };
+
+  // navigator.geolocation.getCurrentPosition(function (position) {
+  //   let location = {
+  //     lon: position.coords.longitude,
+  //     lat: position.coords.latitude
+  //   };
     return location;
-  });
 }
 
 // This function gets the distance between every taxi and the user location
@@ -71,10 +77,20 @@ function checkTaxi(taxis, location) {
 
   // Bot post a message in Slack
   if (choosenTaxi !== `There's no free taxi near you right now`) {
-    bot.reply(message, `Your taxi is on it's way!`);
+    bot.say({
+      text: `Your taxi is on it's way!`,
+      channel
+  });
+    bot.say({
+      text: JSON.stringify(choosenTaxi),
+      channel
+    });
   }
   else {
-    bot.reply(message, choosenTaxi);
+    bot.say({
+      text: choosenTaxi,
+      channel
+    });
   }
 }
 

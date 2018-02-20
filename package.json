@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "botkit": "^0.6.11"
+    "botkit": "^0.6.11",
+    "dotenv": "^5.0.0",
+    "geolocation": "^0.2.0",
+    "node-fetch": "^2.0.0"
   }
 }
