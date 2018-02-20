@@ -2,7 +2,6 @@
 var Botkit = require ('botkit');
 var fetch = require ('node-fetch');
 var controller = Botkit.slackbot();
-var bodyParser = require('body-parser');
 
 require ('dotenv').config();
 
