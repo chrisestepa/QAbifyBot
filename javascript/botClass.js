@@ -138,6 +138,7 @@ class QAbifyBot {
     // fetch(`http://35.204.38.8:4000/api/v1/taxis/${city}/${car}`, {
     //   method: "POST",
     //   body: JSON.stringify(data)
+    //   headers: { 'Content-Type': 'application/json' },
     // })
     // .then(response => message = `Your taxi is on its way!`);
     // .catch(error => message = error);
